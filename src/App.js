@@ -3,8 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button'
 import papa from 'papaparse'
-import converter from 'convert-array-to-csv'
-import { uniq, uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import exportToCsv from './exportToCsv.js'
 
 function App() {
