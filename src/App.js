@@ -86,9 +86,6 @@ function App() {
       }
     }
 
-    // Add headers
-    output.unshift(['1', '2'])
-
     return output
   } 
 
