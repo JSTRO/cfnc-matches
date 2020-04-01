@@ -20,12 +20,20 @@ function App() {
       }
     });
   }
+
+  const formatCsvName = () => {
+    const d = new Date()
+    const isoDate = d.toISOString().slice(0, 10)
+    const dateTime = `${isoDate}_${d.getHours()}_${d.getMinutes()}_${d.getSeconds()}`
+    return `matches_${dateTime}.csv`
+  }
   
   const handleClick = () => {
+    const fileName = formatCsvName()
     if (matches.length < 1) {
       alert("Please choose a file.")
     } else {
-      exportToCsv('download.csv', matches)
+      exportToCsv(fileName, matches)
     }
   }
 
