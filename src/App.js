@@ -32,29 +32,29 @@ function App() {
 
   const findMatches = rows => {
     const data = rows.map(row1 => {
-      const row1_email = row1['Email Address'].trim().toLowerCase()
+      const row1_email = row1['Email Address']
       const row1_gender = row1['I am a']
       const row1_age = row1['I am aged']
       const row1_pref = row1['I am interested in dating a']
       const row1_interest = row1['I am interested in dating someone aged ']
       const row1_religion_important = row1['It is important that my partner is the same religion as me']
-      const row1_religion = row1['What religion are you?'].trim().toLowerCase()
+      const row1_religion = row1['What religion are you?']
       const row1_children = row1['Do you want to have children?']
       const row1_politics_important = row1['It is important that my partner has the same political beliefs as I do']
-      const row1_politics = row1['If so, my political beliefs are'].trim().toLowerCase()
+      const row1_politics = row1['If so, my political beliefs are']
       return ([
         row1_email,
         rows.filter(row2 => { // TODO: trim and standardize case
-          const row2_email = row2['Email Address'].trim().toLowerCase()
+          const row2_email = row2['Email Address']
           const row2_gender = row2['I am a']
           const row2_age = row2['I am aged']
           const row2_pref = row2['I am interested in dating a']
           const row2_interest = row2['I am interested in dating someone aged ']
           const row2_religion_important = row2['It is important that my partner is the same religion as me']
-          const row2_religion = row2['What religion are you?'].trim().toLowerCase()
+          const row2_religion = row2['What religion are you?']
           const row2_children = row2['Do you want to have children?']
           const row2_politics_important = row2['It is important that my partner has the same political beliefs as I do']
-          const row2_politics = row2['If so, my political beliefs are'].trim().toLowerCase()
+          const row2_politics = row2['If so, my political beliefs are']
           return (
             (row1_email !== row2_email) && // Cannot match with yourself
             (row1_pref === row2_gender) && (row1_gender === row2_pref) &&
