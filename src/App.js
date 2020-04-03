@@ -62,7 +62,6 @@ function App() {
       return ([
         row1[email],
         rows.filter(row2 => {
-          //row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) + 1] ? console.log(row1[age_pref], ageChoices[ageChoices.indexOf(row2[age]) + 1]) : null
           return (
             // Cannot match with self
             (row1[email] !== row2[email]) &&
@@ -113,7 +112,7 @@ function App() {
       ])
     }).filter(match => match[1].length > 0) // Remove rows with no matches
 
-    console.log("matches", matches)
+    // console.log("matches", matches)
     
     // Format as all possible permutations of matches                 
     let output = []
@@ -137,7 +136,7 @@ function App() {
         }
       }
     }
-    console.log(uniqBy(output, item => JSON.stringify(item)))
+    // console.log(uniqBy(output, item => JSON.stringify(item)))
     // Only include unique entries
     return uniqBy(output, item => JSON.stringify(item))
   } 
