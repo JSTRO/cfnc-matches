@@ -62,6 +62,7 @@ function App() {
       return ([
         row1[email],
         rows.filter(row2 => {
+          //row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) + 1] ? console.log(row1[age_pref], ageChoices[ageChoices.indexOf(row2[age]) + 1]) : null
           return (
             // Cannot match with self
             (row1[email] !== row2[email]) &&
@@ -69,30 +70,19 @@ function App() {
             (row1[gender_pref] === row2[gender] && row1[gender] === row2[gender_pref]) &&
             // Females match with their age range + one above
             (
-              row1[gender] === "Female" ? 
+              row1[gender] === "Female" ?
               (
                 row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
                 row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) + 1] 
-              ) : null ||
-              row2[gender] === "Female" ?
-              (
-                row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age])] ||
-                row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age]) + 1]
-              ) : null
-            ) &&
-            // Male match with their age range + one below
-            (
+              ) :
+              // Males match with their age range + one below
               row1[gender] === "Male" ?
               (
                 row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
                 row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) - 1]
-              ) : null ||
-              row2[gender] === "Male" ?
-              (
-                row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age])] ||
-                row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age]) - 1]
-              ) : null
+              ) : true // Non-binary matches are not filtered by age pref
             ) &&
+            // Same city
             (row1[city] === row2[city]) &&
             // If either person minds children, their match should not have children
             (
@@ -112,7 +102,7 @@ function App() {
               row1[politics] === row2[politics] : 
               (row1[politics] === row2[politics] || row1[politics] !== row2[politics])
             ) &&
-            // Children: unsure can match with whoever
+            // Unsure about wanting children can match with whoever
             (
               row1[want_children] !== "Unsure" ?
               row1[want_children] === row2[want_children] : 
@@ -125,7 +115,7 @@ function App() {
 
     console.log("matches", matches)
     
-    // Format as all possible matches                 
+    // Format as all possible permutations of matches                 
     let output = []
     for (let i=0; i<matches.length; i++) {
       const a = matches[i][0]
@@ -138,9 +128,6 @@ function App() {
         output.push([a, b[0]])
       }
     }
-
-    // Only include unique entries
-    output = uniqBy(output, item => JSON.stringify(item))
     
     // Only include one side of matches
     for (let i=0; i<output.length; i++) {
@@ -150,8 +137,9 @@ function App() {
         }
       }
     }
-
-    return output
+    console.log(uniqBy(output, item => JSON.stringify(item)))
+    // Only include unique entries
+    return uniqBy(output, item => JSON.stringify(item))
   } 
 
   return (
@@ -164,9 +152,35 @@ function App() {
             Download Matches
           </Button> 
         </div>
+        <h4>Matching Criteria:</h4>
+        <div className="criteria"> 
+          <ol>
+            <li>Gender Preference</li>
+              <ol type='I'>
+                <li>Gender of match should equal gender preference.</li>
+              </ol>  
+            <li>Age preference</li>
+              <ol type='I'>
+                <li>Female: Age of their match should equal their age preference or one group older.</li>
+                <li>Male: Age of their match should equal their age preference or one group younger.</li>
+                <li>Non-binary: No age filter applied.</li>
+              </ol>
+            <li>City</li>  
+            <li>If either person minds children, their match should not have children.</li>
+            <li>If answer to "Wants children?" is "Yes" or "No", match on this criteria. If "Unsure", ignore this criteria.</li>
+            <li>Religion</li>
+              <ol type='I'>
+                <li>If religion is important to either person, match on religion.</li>
+              </ol> 
+            <li>Politics</li>
+              <ol type='I'>
+                <li>If politics is important to either person AND that person is NOT a Moderate, match on politics. Else ignore this criteria.</li>
+              </ol> 
+          </ol>
+        </div>
       </div>  
     </div>
   )
 }
 
-export default App;
+export default App
