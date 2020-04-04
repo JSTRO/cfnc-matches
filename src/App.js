@@ -67,30 +67,66 @@ function App() {
             (row1[email] !== row2[email]) &&
             // Match to gender preference
             (row1[gender_pref] === row2[gender] && row1[gender] === row2[gender_pref]) &&
-            // Females match with their age range + one above
-            (
-              row1[gender] === "Female" ?
-              (
-                row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
-                row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) + 1] 
-              ) :
-              // Males match with their age range + one below
-              row1[gender] === "Male" ?
-              (
-                row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
-                row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) - 1]
-              ) : true // Non-binary matches are not filtered by age pref
-            ) &&
             // Same city
             (row1[city] === row2[city]) &&
+            // Age Preferences
+            (
+              // Females match with their age range + one above
+              row1[gender] === "Female" && row2[gender] === "Male" ?
+              (
+                (
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) - 1]
+                ) &&  
+                (
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age])] ||
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age]) + 1]
+                )
+              ) :
+              row1[gender] === "Male" && row2[gender] === "Female" ?
+              ( 
+                (
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) + 1] 
+                ) &&
+                (
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age])] ||
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age]) - 1] 
+                )
+              ) :
+              row1[gender] === "Male" && row2[gender] === "Male" ?
+              (
+                (
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) + 1]
+                )
+                 &&
+                (
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age])] || 
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age]) + 1]
+                )
+              ) :
+              row1[gender] === "Female" && row2[gender] === "Female" ?
+              (
+                (
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age])] ||
+                  row1[age_pref] === ageChoices[ageChoices.indexOf(row2[age]) - 1]
+                )
+                 &&
+                (
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age])] || 
+                  row2[age_pref] === ageChoices[ageChoices.indexOf(row1[age]) - 1]
+                )
+              ) : true // Non-binary matches are not filtered by age pref
+            ) &&
             // If either person minds children, their match should not have children
             (
-              row1[mind_children] === "Yes" ? row2[have_children] === "No" :
-              row2[mind_children] === "Yes" ? row1[have_children] === 'No' : null
+              (row1[mind_children] === "Yes" ? row2[have_children] === "No" : true) &&
+              (row2[mind_children] === "Yes" ? row1[have_children] === 'No' : true)
             ) &&
             (
               (row1[religion_important] === 'Yes' || row2[religion_important] === 'Yes') ? 
-              row1[religion] === row2[religion] : null
+              row1[religion] === row2[religion] : true
             ) &&
             // Moderates can match with whoever
             (
@@ -98,47 +134,57 @@ function App() {
                 (row1[politics_important] === 'Yes' && row1[politics] !== 'Moderate') || 
                 (row2[politics_important] === 'Yes' && row2[politics] !== 'Moderate')
               ) ?
-              row1[politics] === row2[politics] : 
-              (row1[politics] === row2[politics] || row1[politics] !== row2[politics])
+              row1[politics] === row2[politics] : true
             ) &&
             // Unsure about wanting children can match with whoever
             (
-              row1[want_children] !== "Unsure" ?
-              row1[want_children] === row2[want_children] : 
-              (row1[want_children] === row2[want_children] || row1[want_children] !== row2[want_children])
+              (row1[want_children] !== "Unsure" || row2[want_children] !== "Unsure" ) ? 
+              row1[want_children] === row2[want_children] : true
             ) 
           )
         }).map(row => row[email])
       ])
     }).filter(match => match[1].length > 0) // Remove rows with no matches
 
-    // console.log("matches", matches)
-    
-    // Format as all possible permutations of matches                 
-    let output = []
-    for (let i=0; i<matches.length; i++) {
-      const a = matches[i][0]
-      const b = matches[i][1]
-      if (b.length > 1) {
-        for (let j=0; j<b.length; j++) {
-          output.push([a, b[j]])
+    console.log("matches", matches)
+
+    // Format as all possible permutations of matches
+    const allPermutations = array => {
+      let output = []
+      for (let i=0; i<array.length; i++) {
+        const a = array[i][0]
+        const b = array[i][1]
+        if (b.length > 1) {
+          for (let j=0; j<b.length; j++) {
+            output.push([a, b[j]])
+          }
+        } else {
+          output.push([a, b[0]])
         }
-      } else {
-        output.push([a, b[0]])
       }
-    }
-    
+      return output
+    }   
+
+    const allPerms = allPermutations(matches)           
+    console.log("allPerms", allPerms)
     // Only include one side of matches
-    for (let i=0; i<output.length; i++) {
-      for (let j=0; j<output.length; j++) {
-        if (output[i][0] === output[j][1] && output[i][1] === output[j][0]) {
-          output.splice(output.indexOf(output[j]), 1)
+    const oneSided = output => {
+      for (let i=0; i<output.length; i++) {
+        for (let j=0; j<output.length; j++) {
+          if (output[i][0] === output[j][1] && output[i][1] === output[j][0]) {
+            output.splice(output.indexOf(output[j]), 1)
+          }
         }
       }
+      return output
     }
-    // console.log(uniqBy(output, item => JSON.stringify(item)))
+    
+    const oneSidedOutput = oneSided(allPerms)
+    console.log("oneSidedOutput", oneSidedOutput)
+
     // Only include unique entries
-    return uniqBy(output, item => JSON.stringify(item))
+    console.log("unique oneSidedOutput", uniqBy(oneSidedOutput, item => JSON.stringify(item)))
+    return uniqBy(oneSidedOutput, item => JSON.stringify(item))
   } 
 
   return (
