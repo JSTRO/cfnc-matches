@@ -1,4 +1,5 @@
 // Convert form column headers into variables
+const email = 'Email Address'
 const gender = 'I am a'
 const age = 'I am aged'
 const genderPref = 'I am interested in dating a'
@@ -13,20 +14,24 @@ const politics = 'If so, my political beliefs are'
 const city = 'City'
 const cityPref = 'Are you open to dating someone from another city? If so, what cities?'
 
+export const emailFilter = (row1, row2) => {
+  return row1[email] !== row2[email]
+}
+
 export const matchGender = (row1, row2) => {
   return (row1[genderPref] === row2[gender] && row1[gender] === row2[genderPref])
 }
 
 export const matchAge = (row1, row2) => {
-  const row1AgePref = row1[agePref].split(", ")
-  const row2AgePref = row2[agePref].split(", ")
+  const row1AgePref = row1[agePref] ? row1[agePref].split(", ") : []
+  const row2AgePref = row1[agePref] ? row2[agePref].split(", ") : []
 
   return row1AgePref.includes(row2[age]) && row2AgePref.includes(row1[age])
 }
 
 export const matchCity = (row1, row2) => {
-  const row1CityPref = row1[cityPref].split(", ")
-  const row2CityPref = row2[cityPref].split(", ")
+  const row1CityPref = row1[cityPref] ? [...row1[cityPref].split(", "), row1[city]] : []
+  const row2CityPref = row2[cityPref] ? [...row2[cityPref].split(", "), row2[city]] : []
 
   return row1CityPref.includes(row2[city]) && row2CityPref.includes(row1[city])
 }
@@ -68,4 +73,3 @@ export const matchPolitics = (row1, row2) => {
     return true
   }
 }
-

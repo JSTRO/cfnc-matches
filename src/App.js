@@ -6,7 +6,8 @@ import papa from 'papaparse'
 import { uniqBy } from 'lodash'
 import exportToCsv from './exportToCsv.js'
 import { allPermutations, oneSided } from './utils.js'
-import { matchGender, 
+import { emailFilter,
+         matchGender, 
          matchAge, 
          matchCity, 
          matchMindChildren, 
@@ -55,6 +56,7 @@ function App() {
         row1[email],
         rows.filter(row2 => {
           return (
+            emailFilter(row1, row2) &&
             matchGender(row1, row2) &&
             matchCity(row1, row2) &&
             matchAge(row1, row2) &&
@@ -91,13 +93,13 @@ function App() {
         <div className="criteria"> 
           <ol>
             <li>
-              <strong>Gender Preference</strong>: Gender of match should equal gender preference.
+              <strong>Gender Preference</strong>: Gender should equal gender preference.
             </li>  
             <li>
-              <strong>Age preference</strong>: Age of match should be included in age preferences and vice versa. 
+              <strong>Age preference</strong>: Age should match ANY age in age preferences. 
             </li>
             <li>
-              <strong>City</strong>: City of match should be included in city preferences and vice versa. 
+              <strong>City</strong>: City should match ANY city in city preferences. 
             </li>  
             <li>
               <strong>Minds children</strong>: If either person minds chidren, their match should not have children.
@@ -109,7 +111,7 @@ function App() {
               <strong>Religion</strong>: If religion is important to either person, match on religion.
             </li>
             <li>
-              <strong>Politics</strong>: If politics is important to either person AND that person is NOT a Moderate, match on politics. Else ignore this criteria.
+              <strong>Politics</strong>: If politics is important to either person AND that person is NOT a Moderate, match on politics.
             </li>
           </ol>
         </div>
