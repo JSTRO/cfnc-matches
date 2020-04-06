@@ -48,7 +48,7 @@ export const matchMindChildren = (row1, row2) => {
 }
 
 export const matchWantChildren = (row1, row2) => {
-  if (row1[wantChildren] !== "Unsure" || row2[wantChildren] !== "Unsure") {
+  if (row1[wantChildren] !== "Unsure" && row2[wantChildren] !== "Unsure") {
     return row1[wantChildren] === row2[wantChildren]
   } else {
     return true
