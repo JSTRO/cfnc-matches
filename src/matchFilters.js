@@ -24,14 +24,14 @@ export const matchGender = (row1, row2) => {
 
 export const matchAge = (row1, row2) => {
   const row1AgePref = row1[agePref] ? row1[agePref].split(", ") : []
-  const row2AgePref = row1[agePref] ? row2[agePref].split(", ") : []
+  const row2AgePref = row2[agePref] ? row2[agePref].split(", ") : []
 
   return row1AgePref.includes(row2[age]) && row2AgePref.includes(row1[age])
 }
 
 export const matchCity = (row1, row2) => {
-  const row1CityPref = row1[cityPref] ? [...row1[cityPref].split(", "), row1[city]] : []
-  const row2CityPref = row2[cityPref] ? [...row2[cityPref].split(", "), row2[city]] : []
+  const row1CityPref = row1[cityPref] ? row1[cityPref].split(", ").concat(row1[city]) : [row1[city]]
+  const row2CityPref = row2[cityPref] ? row2[cityPref].split(", ").concat(row2[city]) : [row2[city]]
 
   return row1CityPref.includes(row2[city]) && row2CityPref.includes(row1[city])
 }
